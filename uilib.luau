@@ -1688,7 +1688,6 @@ function Library:Window(p)
 			local Title = p.Title or 'null'
 			local RealBackground = Instance.new("Frame")
 			local Section = Instance.new("Frame")
-            Section.BackgroundTransparency = 0.5
 			local Section_1 = Instance.new("TextLabel")
 			local UIPadding_1 = Instance.new("UIPadding")
 
