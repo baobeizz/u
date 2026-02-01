@@ -1338,7 +1338,7 @@ function Library:Window(p)
 
 	Frame_6.Parent = TabP_1
 	Frame_6.BackgroundColor3 = Color3.fromRGB(255,255,255)
-	Frame_6.BackgroundTransparency = 0.5
+	Frame_6.BackgroundTransparency = 1
 	Frame_6.BorderColor3 = Color3.fromRGB(0,0,0)
 	Frame_6.BorderSizePixel = 0
 	Frame_6.Size = UDim2.new(0, 110,1, 0)
