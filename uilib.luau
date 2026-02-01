@@ -1094,7 +1094,7 @@ function Library:Window(p)
 	Background_1.Position = UDim2.new(0.5, 0,0.5, 0)
 	Background_1.Size = UDim2.new(1, 0,1, 0)
 	Background_1.ClipsDescendants = true
-	Background_1.GroupTransparency = 0.5
+	Background_1.GroupTransparency = 1
 
 	Shadow_1.Visible = true  
 	local org = Background_1.Size
@@ -1105,7 +1105,7 @@ function Library:Window(p)
 		s = Enum.EasingStyle.Linear,
 		d = "InOut",
 		g = {
-			GroupTransparency = 0,
+			GroupTransparency = 0.5,
 			Size = org
 		}
 	}):Play()
