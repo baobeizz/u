@@ -1695,6 +1695,7 @@ function Library:Window(p)
 			RealBackground.Parent = ScrollingFrame_1
 			RealBackground.BackgroundTransparency = 1
 			RealBackground.BorderColor3 = Color3.fromRGB(0,0,0)
+            Background_1.BackgroundTransparency = 0.5  -- เพิ่มบรรทัดนี้
 			RealBackground.BorderSizePixel = 0
 			RealBackground.Size = UDim2.new(1, 0,0, 20)
 			RealBackground.ClipsDescendants = true
