@@ -1685,41 +1685,40 @@ function Library:Window(p)
 		local Func = {}
 
 		function Func:Section(p)
-			local Title = p.Title or 'null'
-			local RealBackground = Instance.new("Frame")
-			local Section = Instance.new("Frame")
-			local Section_1 = Instance.new("TextLabel")
-			local UIPadding_1 = Instance.new("UIPadding")
+            local Title = p.Title or 'null'
+            local RealBackground = Instance.new("Frame")
+            local Section = Instance.new("Frame")
+            local Section_1 = Instance.new("TextLabel")
+            local UIPadding_1 = Instance.new("UIPadding")
 
-			RealBackground.Name = "Real Background"
-			RealBackground.Parent = ScrollingFrame_1
-			RealBackground.BackgroundTransparency = 1
-			RealBackground.BorderColor3 = Color3.fromRGB(0,0,0)
-            RealBackground.BackgroundTransparency = 0.5 --XXXX
-			RealBackground.BorderSizePixel = 0
-			RealBackground.Size = UDim2.new(1, 0,0, 20)
-			RealBackground.ClipsDescendants = true
+            RealBackground.Name = "Real Background"
+            RealBackground.Parent = ScrollingFrame_1
+            RealBackground.BackgroundTransparency = 0.5  -- เปลี่ยนจาก 1 เป็น 0.5
+            RealBackground.BorderColor3 = Color3.fromRGB(0,0,0)
+            RealBackground.BorderSizePixel = 0
+            RealBackground.Size = UDim2.new(1, 0,0, 20)
+            RealBackground.ClipsDescendants = true
 
-			Section.Name = "Background"
-			Section.Parent = RealBackground
-			Section.BackgroundColor3 = Color3.fromRGB(255,255,255)
-			Section.BackgroundTransparency = 1
-			Section.BorderColor3 = Color3.fromRGB(0,0,0)
-			Section.BorderSizePixel = 0
-			Section.Size = UDim2.new(1, 0,0, 20)
+            Section.Name = "Background"
+            Section.Parent = RealBackground
+            Section.BackgroundColor3 = Color3.fromRGB(255,255,255)
+            Section.BackgroundTransparency = 0.5  -- เปลี่ยนจาก 1 เป็น 0.5
+            Section.BorderColor3 = Color3.fromRGB(0,0,0)
+            Section.BorderSizePixel = 0
+            Section.Size = UDim2.new(1, 0,0, 20)
 
-			Section_1.Name = "Section"
-			Section_1.Parent = Section
-			Section_1.BackgroundColor3 = Color3.fromRGB(255,255,255)
-			Section_1.BackgroundTransparency = 1
-			Section_1.BorderColor3 = Color3.fromRGB(0,0,0)
-			Section_1.BorderSizePixel = 0
-			Section_1.Size = UDim2.new(1, 0,0, 20)
-			Section_1.Font = Enum.Font.GothamBold
-			Section_1.Text = Title
-			Section_1.TextColor3 = Color3.fromRGB(255,255,255)
-			Section_1.TextSize = 12
-			Section_1.TextXAlignment = Enum.TextXAlignment.Left
+            Section_1.Name = "Section"
+            Section_1.Parent = Section
+            Section_1.BackgroundColor3 = Color3.fromRGB(255,255,255)
+            Section_1.BackgroundTransparency = 0.5  -- เปลี่ยนจาก 1 เป็น 0.5
+            Section_1.BorderColor3 = Color3.fromRGB(0,0,0)
+            Section_1.BorderSizePixel = 0
+            Section_1.Size = UDim2.new(1, 0,0, 20)
+            Section_1.Font = Enum.Font.GothamBold
+            Section_1.Text = Title
+            Section_1.TextColor3 = Color3.fromRGB(255,255,255)
+            Section_1.TextSize = 12
+            Section_1.TextXAlignment = Enum.TextXAlignment.Left
 
 			addToTheme('Text & Icon', Section_1)
 
