@@ -1702,7 +1702,6 @@ function Library:Window(p)
             Section.Name = "Background"
             Section.Parent = RealBackground
             Section.BackgroundColor3 = Color3.fromRGB(255,255,255)
-            Section.BackgroundTransparency = 0.5  -- เปลี่ยนจาก 1 เป็น 0.5
             Section.BorderColor3 = Color3.fromRGB(0,0,0)
             Section.BorderSizePixel = 0
             Section.Size = UDim2.new(1, 0,0, 20)
@@ -1710,7 +1709,6 @@ function Library:Window(p)
             Section_1.Name = "Section"
             Section_1.Parent = Section
             Section_1.BackgroundColor3 = Color3.fromRGB(255,255,255)
-            Section_1.BackgroundTransparency = 0.5  -- เปลี่ยนจาก 1 เป็น 0.5
             Section_1.BorderColor3 = Color3.fromRGB(0,0,0)
             Section_1.BorderSizePixel = 0
             Section_1.Size = UDim2.new(1, 0,0, 20)
