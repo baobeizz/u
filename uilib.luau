@@ -1693,7 +1693,7 @@ function Library:Window(p)
 			RealBackground.Name = "Real Background"
 			RealBackground.Parent = ScrollingFrame_1
 			RealBackground.BackgroundTransparency = 1
-			RealBackground.BorderColor3 = Color3.fromRGB(0,0,0)
+			RealBackground.BorderColor3 = Color3.fromRGB(163,162,165)
 			RealBackground.BorderSizePixel = 0
 			RealBackground.Size = UDim2.new(1, 0,0, 20)
 			RealBackground.ClipsDescendants = true
@@ -1702,7 +1702,7 @@ function Library:Window(p)
 			Section.Parent = RealBackground
 			Section.BackgroundColor3 = Color3.fromRGB(255,255,255)
 			Section.BackgroundTransparency = 1
-			Section.BorderColor3 = Color3.fromRGB(0,0,0)
+			Section.BorderColor3 = Color3.fromRGB(163,162,165)
 			Section.BorderSizePixel = 0
 			Section.Size = UDim2.new(1, 0,0, 20)
 
@@ -1710,7 +1710,7 @@ function Library:Window(p)
 			Section_1.Parent = Section
 			Section_1.BackgroundColor3 = Color3.fromRGB(255,255,255)
 			Section_1.BackgroundTransparency = 1
-			Section_1.BorderColor3 = Color3.fromRGB(0,0,0)
+			Section_1.BorderColor3 = Color3.fromRGB(163,162,165)
 			Section_1.BorderSizePixel = 0
 			Section_1.Size = UDim2.new(1, 0,0, 20)
 			Section_1.Font = Enum.Font.GothamBold
