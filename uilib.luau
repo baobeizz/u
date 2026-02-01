@@ -1331,7 +1331,7 @@ function Library:Window(p)
 	TabP_1.Name = "TabP"
 	TabP_1.Parent = Background_1
 	TabP_1.BackgroundColor3 = Color3.fromRGB(255,255,255)
-	TabP_1.BackgroundTransparency = 0.5
+	TabP_1.BackgroundTransparency = 1
 	TabP_1.BorderColor3 = Color3.fromRGB(0,0,0)
 	TabP_1.BorderSizePixel = 0
 	TabP_1.Size = UDim2.new(1, 0,1, 0)
@@ -1693,7 +1693,7 @@ function Library:Window(p)
 
 			RealBackground.Name = "Real Background"
 			RealBackground.Parent = ScrollingFrame_1
-			RealBackground.BackgroundTransparency = 1
+			RealBackground.BackgroundTransparency = 0.5
 			RealBackground.BorderColor3 = Color3.fromRGB(0,0,0)
 			RealBackground.BorderSizePixel = 0
 			RealBackground.Size = UDim2.new(1, 0,0, 20)
