@@ -1688,12 +1688,13 @@ function Library:Window(p)
 			local Title = p.Title or 'null'
 			local RealBackground = Instance.new("Frame")
 			local Section = Instance.new("Frame")
+            Section.BackgroundTransparency = 0.5
 			local Section_1 = Instance.new("TextLabel")
 			local UIPadding_1 = Instance.new("UIPadding")
 
 			RealBackground.Name = "Real Background"
 			RealBackground.Parent = ScrollingFrame_1
-			RealBackground.BackgroundTransparency = 0.5
+			RealBackground.BackgroundTransparency = 1
 			RealBackground.BorderColor3 = Color3.fromRGB(0,0,0)
 			RealBackground.BorderSizePixel = 0
 			RealBackground.Size = UDim2.new(1, 0,0, 20)
