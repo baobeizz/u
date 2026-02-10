@@ -6,10 +6,10 @@ local Workspace = game:GetService("Workspace")
 -- PLAYER
 local player = Players.LocalPlayer
 local AutoFarmEnabled = true
-local Reloading = true
+local Reloading = false
 
 -- SETTINGS
-local ExtendMultiplier = 4
+local ExtendMultiplier = 2.5
 local ExtendVisible = true
 
 -- GET CHARACTER
@@ -146,6 +146,115 @@ local function Attack(targetNape)
     end
 end
 
+-- ===============================
+-- CHECK IF PLAYER IS DEAD
+-- ===============================
+local function IsPlayerDead()
+    local character = player.Character
+    if not character then return true end
+    
+    local humanoid = character:FindFirstChild("Humanoid")
+    if not humanoid then return true end
+    
+    if humanoid.Health <= 0 then
+        return true
+    end
+    
+    return false
+end
+
+-- ===============================
+-- AUTO RETRY MISSION
+-- ===============================
+local function AutoRetry()
+    task.spawn(function()
+        while AutoFarmEnabled do
+            task.wait(1)
+            
+            local success, err = pcall(function()
+                local retryButton = player.PlayerGui:FindFirstChild("Interface")
+                if not retryButton then return end
+                
+                retryButton = retryButton:FindFirstChild("Rewards")
+                if not retryButton then return end
+                
+                retryButton = retryButton:FindFirstChild("Main")
+                if not retryButton then return end
+                
+                retryButton = retryButton:FindFirstChild("Info")
+                if not retryButton then return end
+                
+                retryButton = retryButton:FindFirstChild("Main")
+                if not retryButton then return end
+                
+                retryButton = retryButton:FindFirstChild("Buttons")
+                if not retryButton then return end
+                
+                retryButton = retryButton:FindFirstChild("Retry")
+                if not retryButton then return end
+                
+                local title = retryButton:FindFirstChild("Title")
+                if not title then return end
+                
+                local remoteGet = ReplicatedStorage:FindFirstChild("Assets")
+                if not remoteGet then return end
+                
+                remoteGet = remoteGet:FindFirstChild("Remotes")
+                if not remoteGet then return end
+                
+                remoteGet = remoteGet:FindFirstChild("GET")
+                if not remoteGet then return end
+                
+                -- ตรวจสอบว่าไม่ใช่ (0/0)
+                if not string.find(title.Text, "(0/0)") then
+                    remoteGet:InvokeServer("Functions", "Retry", "Add")
+                    
+                    repeat
+                        task.wait(0.1)
+                        if not string.find(title.Text, "STARTING") then
+                            remoteGet:InvokeServer("Functions", "Retry", "Add")
+                        else
+                            break
+                        end
+                    until not AutoFarmEnabled
+                end
+            end)
+            
+            if not success then
+                warn("Auto Retry Error:", err)
+            end
+        end
+    end)
+end
+
+-- ===============================
+-- DEATH DETECTION
+-- ===============================
+local function MonitorPlayerDeath()
+    player.CharacterAdded:Connect(function(character)
+        local humanoid = character:WaitForChild("Humanoid")
+        
+        humanoid.Died:Connect(function()
+            print("Player died! Stopping Auto Farm...")
+            AutoFarmEnabled = false
+        end)
+    end)
+    
+    -- ตรวจสอบ character ปัจจุบันด้วย
+    if player.Character then
+        local humanoid = player.Character:FindFirstChild("Humanoid")
+        if humanoid then
+            humanoid.Died:Connect(function()
+                print("Player died! Stopping Auto Farm...")
+                AutoFarmEnabled = false
+            end)
+        end
+    end
+end
+
+-- เริ่มต้น Death Monitor
+MonitorPlayerDeath()
+
 -- MAIN AUTO FARM LOOP
 task.spawn(function()
     print("Auto Farm Started")
@@ -153,6 +262,13 @@ task.spawn(function()
 
     while AutoFarmEnabled do
         task.wait(0.15)
+        
+        -- ตรวจสอบว่าตายหรือไม่
+        if IsPlayerDead() then
+            print("Player is dead! Stopping Auto Farm...")
+            AutoFarmEnabled = false
+            break
+        end
 
         local character = player.Character
         if character then
@@ -176,6 +292,8 @@ task.spawn(function()
             end
         end
     end
+    
+    print("Auto Farm Stopped")
 end)
 
 -- CONTINUOUSLY EXTEND NAPES
@@ -185,5 +303,8 @@ task.spawn(function()
         ExtendNape()
     end
 end)
+
+-- START AUTO RETRY
+AutoRetry()
 
 print("Script loaded successfully!")
