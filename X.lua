@@ -17,24 +17,23 @@ local function GetCharacter()
     return player.Character or player.CharacterAdded:Wait()
 end
 
--- ===============================
--- ฟังก์ชัน: ขยาย Nape
--- ===============================
-local function extendNape(multiplier, visible, erenExtendEnabled)
-    local titans = game.Workspace:WaitForChild("Titans")
-    
-    for _, titan in pairs(titans:GetChildren()) do
-        if titan:IsA("Model") and titan.Name ~= "Attack_Titan" then
+-- EXTEND NAPE
+local function ExtendNape()
+    local titans = Workspace:FindFirstChild("Titans")
+    if not titans then return end
+
+    for _, titan in ipairs(titans:GetChildren()) do
+        if titan:IsA("Model") then
             local hitboxes = titan:FindFirstChild("Hitboxes")
             if hitboxes then
                 local hit = hitboxes:FindFirstChild("Hit")
                 if hit then
                     local nape = hit:FindFirstChild("Nape")
-                    if nape then
-                        nape.Size = Vector3.new(60, 60, 60) * multiplier
-                        nape.Color = Color3.new(1, 1, 1)
+                    if nape and nape:IsA("BasePart") then
+                        nape.Size = Vector3.new(60, 60, 60) * ExtendMultiplier
                         nape.Material = Enum.Material.Neon
-                        nape.Transparency = visible and 0.96 or 1
+                        nape.Color = Color3.fromRGB(255, 255, 255)
+                        nape.Transparency = ExtendVisible and 0.95 or 1
                     end
                 end
             end
@@ -96,8 +95,8 @@ local function GetNearestNape()
     local nearestNape = nil
     local shortestDistance = math.huge
 
-    for _, titan in pairs(titans:GetChildren()) do
-        if titan:IsA("Model") and titan.Name ~= "Attack_Titan" then
+    for _, titan in ipairs(titans:GetChildren()) do
+        if titan:IsA("Model") then
             local humanoid = titan:FindFirstChild("Humanoid")
             if humanoid and humanoid.Health > 0 then
                 local hitboxes = titan:FindFirstChild("Hitboxes")
@@ -150,7 +149,7 @@ end
 -- MAIN AUTO FARM LOOP
 task.spawn(function()
     print("Auto Farm Started")
-    extendNape(ExtendMultiplier, ExtendVisible, false)
+    ExtendNape()
 
     while AutoFarmEnabled do
         task.wait(0.15)
@@ -183,7 +182,7 @@ end)
 task.spawn(function()
     while AutoFarmEnabled do
         task.wait(2)
-        extendNape(ExtendMultiplier, ExtendVisible, false)
+        ExtendNape()
     end
 end)
 
