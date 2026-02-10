@@ -6,10 +6,10 @@ local Workspace = game:GetService("Workspace")
 -- PLAYER
 local player = Players.LocalPlayer
 local AutoFarmEnabled = true
-local Reloading = false
+local Reloading = true
 
 -- SETTINGS
-local ExtendMultiplier = 2.5
+local ExtendMultiplier = 4
 local ExtendVisible = true
 
 -- GET CHARACTER
