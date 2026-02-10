@@ -1,4 +1,4 @@
--- VenyX Mobile UI Library for Delta Executor
+-- VenyX Mobile UI Library for Delta Executor (Fixed Version)
 -- Optimized for mobile touch controls
 
 local VenyxLib = {}
@@ -6,14 +6,13 @@ local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 local CoreGui = game:GetService("CoreGui")
 
--- สร้าง ScreenGui
+-- Create ScreenGui
 local function CreateScreenGui()
     local ScreenGui = Instance.new("ScreenGui")
     ScreenGui.Name = "VenyxMobileUI"
     ScreenGui.ResetOnSpawn = false
     ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     
-    -- ตรวจสอบว่าใช้ Delta หรือไม่
     if gethui then
         ScreenGui.Parent = gethui()
     elseif syn and syn.protect_gui then
@@ -26,7 +25,7 @@ local function CreateScreenGui()
     return ScreenGui
 end
 
--- ฟังก์ชัน Tween
+-- Tween Function
 local function Tween(object, properties, duration)
     local tweenInfo = TweenInfo.new(duration or 0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
     local tween = TweenService:Create(object, tweenInfo, properties)
@@ -34,7 +33,7 @@ local function Tween(object, properties, duration)
     return tween
 end
 
--- สร้าง UI Effect
+-- Create Ripple Effect
 local function CreateRipple(parent, x, y)
     local Ripple = Instance.new("Frame")
     Ripple.Name = "Ripple"
@@ -56,7 +55,7 @@ local function CreateRipple(parent, x, y)
     end)
 end
 
--- สร้าง Window
+-- Create Window
 function VenyxLib:CreateWindow(config)
     config = config or {}
     local Title = config.Title or "VenyX Mobile"
@@ -64,7 +63,7 @@ function VenyxLib:CreateWindow(config)
     
     local ScreenGui = CreateScreenGui()
     
-    -- สี Theme
+    -- Theme Colors
     local Colors = {
         Dark = {
             Background = Color3.fromRGB(20, 20, 25),
@@ -84,7 +83,7 @@ function VenyxLib:CreateWindow(config)
     
     local CurrentTheme = Colors[Theme] or Colors.Dark
     
-    -- Toggle Button (ปุ่มเปิด/ปิด UI)
+    -- Toggle Button
     local ToggleButton = Instance.new("TextButton")
     ToggleButton.Name = "ToggleButton"
     ToggleButton.Size = UDim2.new(0, 60, 0, 60)
@@ -100,17 +99,6 @@ function VenyxLib:CreateWindow(config)
     local ToggleCorner = Instance.new("UICorner")
     ToggleCorner.CornerRadius = UDim.new(0, 12)
     ToggleCorner.Parent = ToggleButton
-    
-    local ToggleShadow = Instance.new("ImageLabel")
-    ToggleShadow.Name = "Shadow"
-    ToggleShadow.BackgroundTransparency = 1
-    ToggleShadow.Position = UDim2.new(0, -5, 0, -5)
-    ToggleShadow.Size = UDim2.new(1, 10, 1, 10)
-    ToggleShadow.Image = "rbxasset://textures/ui/GuiImagePlaceholder.png"
-    ToggleShadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
-    ToggleShadow.ImageTransparency = 0.7
-    ToggleShadow.ZIndex = 999
-    ToggleShadow.Parent = ToggleButton
     
     -- Main Frame
     local MainFrame = Instance.new("Frame")
@@ -206,7 +194,7 @@ function VenyxLib:CreateWindow(config)
     ContentContainer.BackgroundTransparency = 1
     ContentContainer.Parent = MainFrame
     
-    -- ระบบ Toggle UI
+    -- Toggle UI System
     local UIVisible = false
     
     local function ToggleUI()
@@ -232,7 +220,7 @@ function VenyxLib:CreateWindow(config)
         Tabs = {}
     }
     
-    -- สร้าง Tab
+    -- Create Tab
     function Window:CreateTab(tabName)
         local TabButton = Instance.new("TextButton")
         TabButton.Name = tabName
@@ -270,32 +258,27 @@ function VenyxLib:CreateWindow(config)
         ContentPadding.PaddingBottom = UDim.new(0, 10)
         ContentPadding.Parent = TabContent
         
-        -- Auto resize content
         ContentLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
             TabContent.CanvasSize = UDim2.new(0, 0, 0, ContentLayout.AbsoluteContentSize.Y + 20)
         end)
         
         TabButton.MouseButton1Click:Connect(function()
-            -- ซ่อน Tab อื่น
             for _, tab in pairs(Window.Tabs) do
                 tab.Button.BackgroundColor3 = CurrentTheme.Background
                 tab.Button.TextColor3 = CurrentTheme.SubText
                 tab.Content.Visible = false
             end
             
-            -- แสดง Tab ปัจจุบัน
             TabButton.BackgroundColor3 = CurrentTheme.Accent
             TabButton.TextColor3 = CurrentTheme.Text
             TabContent.Visible = true
             Window.CurrentTab = tabName
             
-            -- Ripple Effect
             local absPos = TabButton.AbsolutePosition
             local absSize = TabButton.AbsoluteSize
             CreateRipple(TabButton, absSize.X / 2, absSize.Y / 2)
         end)
         
-        -- Tab Object
         local Tab = {
             Button = TabButton,
             Content = TabContent
@@ -303,7 +286,6 @@ function VenyxLib:CreateWindow(config)
         
         Window.Tabs[tabName] = Tab
         
-        -- เปิด Tab แรกอัตโนมัติ
         if not Window.CurrentTab then
             TabButton.BackgroundColor3 = CurrentTheme.Accent
             TabButton.TextColor3 = CurrentTheme.Text
@@ -311,7 +293,7 @@ function VenyxLib:CreateWindow(config)
             Window.CurrentTab = tabName
         end
         
-        -- สร้าง Button
+        -- Create Button
         function Tab:CreateButton(buttonConfig)
             buttonConfig = buttonConfig or {}
             local ButtonText = buttonConfig.Text or "Button"
@@ -339,7 +321,7 @@ function VenyxLib:CreateWindow(config)
             return Button
         end
         
-        -- สร้าง Toggle
+        -- Create Toggle
         function Tab:CreateToggle(toggleConfig)
             toggleConfig = toggleConfig or {}
             local ToggleText = toggleConfig.Text or "Toggle"
@@ -402,7 +384,7 @@ function VenyxLib:CreateWindow(config)
             return ToggleFrame
         end
         
-        -- สร้าง Slider
+        -- Create Slider
         function Tab:CreateSlider(sliderConfig)
             sliderConfig = sliderConfig or {}
             local SliderText = sliderConfig.Text or "Slider"
@@ -498,7 +480,7 @@ function VenyxLib:CreateWindow(config)
             return SliderFrame
         end
         
-        -- สร้าง TextBox
+        -- Create TextBox
         function Tab:CreateTextBox(textboxConfig)
             textboxConfig = textboxConfig or {}
             local TextBoxText = textboxConfig.Text or "TextBox"
@@ -558,7 +540,7 @@ function VenyxLib:CreateWindow(config)
             return TextBoxFrame
         end
         
-        -- สร้าง Label
+        -- Create Label
         function Tab:CreateLabel(labelText)
             local Label = Instance.new("TextLabel")
             Label.Name = "Label"
