@@ -1,5 +1,3 @@
-
-
 -- SERVICES
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -8,7 +6,7 @@ local Workspace = game:GetService("Workspace")
 -- PLAYER
 local player = Players.LocalPlayer
 local AutoFarmEnabled = true
-local Reloading = true
+local Reloading = false
 
 -- SETTINGS
 local ExtendMultiplier = 2.5
@@ -19,22 +17,26 @@ local function GetCharacter()
     return player.Character or player.CharacterAdded:Wait()
 end
 
--- EXTEND NAPE
-local function ExtendNape()
-    local titans = Workspace:FindFirstChild("Titans")
-    if not titans then return end
-
-    for _, titan in ipairs(titans:GetChildren()) do
-        if titan:IsA("Model") then
+-- ===============================
+-- ฟังก์ชัน: ขยาย Nape
+-- ===============================
+local function extendNape(multiplier, visible, erenExtendEnabled)
+    local titans = game.Workspace:WaitForChild("Titans")
+    
+    for _, titan in pairs(titans:GetChildren()) do
+        if titan:IsA("Model") and titan.Name ~= "Attack_Titan" then
             local hitboxes = titan:FindFirstChild("Hitboxes")
-            local hit = hitboxes and hitboxes:FindFirstChild("Hit")
-            local nape = hit and hit:FindFirstChild("Nape")
-
-            if nape and nape:IsA("BasePart") then
-                nape.Size = Vector3.new(60,60,60) * ExtendMultiplier
-                nape.Material = Enum.Material.Neon
-                nape.Color = Color3.fromRGB(255,255,255)
-                nape.Transparency = ExtendVisible and 0.95 or 1
+            if hitboxes then
+                local hit = hitboxes:FindFirstChild("Hit")
+                if hit then
+                    local nape = hit:FindFirstChild("Nape")
+                    if nape then
+                        nape.Size = Vector3.new(60, 60, 60) * multiplier
+                        nape.Color = Color3.new(1, 1, 1)
+                        nape.Material = Enum.Material.Neon
+                        nape.Transparency = visible and 0.96 or 1
+                    end
+                end
             end
         end
     end
@@ -45,24 +47,34 @@ local function AutoReloadBlade()
     if Reloading then return end
 
     local char = GetCharacter()
-    if char:GetAttribute("IFrames") ~= nil then return end
+    if not char then return end
+    if char:GetAttribute("IFrames") then return end
 
-    local rig = char:FindFirstChild("Rig_" .. player.Name)
-    local left = rig and rig:FindFirstChild("LeftHand")
-    local blade = left and left:FindFirstChild("Blade_1")
+    local rigName = "Rig_" .. tostring(player.Name)
+    local rig = char:FindFirstChild(rigName)
+    if not rig then return end
+    
+    local leftHand = rig:FindFirstChild("LeftHand")
+    if not leftHand then return end
+    
+    local blade = leftHand:FindFirstChild("Blade_1")
     if not blade or blade.Transparency ~= 1 then return end
 
     local assets = ReplicatedStorage:FindFirstChild("Assets")
-    local remotes = assets and assets:FindFirstChild("Remotes")
-    local GET = remotes and remotes:FindFirstChild("GET")
+    if not assets then return end
+    
+    local remotes = assets:FindFirstChild("Remotes")
+    if not remotes then return end
+    
+    local GET = remotes:FindFirstChild("GET")
     if not GET then return end
 
     Reloading = true
 
     for i = 1, 6 do
-        if blade.Transparency ~= 1 then break end
+        if not blade or blade.Transparency ~= 1 then break end
         task.wait(0.6)
-        pcall(function()
+        local success = pcall(function()
             GET:InvokeServer("Blades", "Reload")
         end)
     end
@@ -70,79 +82,95 @@ local function AutoReloadBlade()
     Reloading = false
 end
 
--- FIND NEAREST TITAN
+-- FIND NEAREST TITAN NAPE
 local function GetNearestNape()
     local char = GetCharacter()
+    if not char then return nil end
+    
     local root = char:FindFirstChild("HumanoidRootPart")
     if not root then return nil end
 
     local titans = Workspace:FindFirstChild("Titans")
     if not titans then return nil end
 
-    local nearest = nil
-    local dist = math.huge
+    local nearestNape = nil
+    local shortestDistance = math.huge
 
-    for _, titan in ipairs(titans:GetChildren()) do
-        local hum = titan:FindFirstChild("Humanoid")
-        if hum and hum.Health > 0 then
-            local hitboxes = titan:FindFirstChild("Hitboxes")
-            local hit = hitboxes and hitboxes:FindFirstChild("Hit")
-            local nape = hit and hit:FindFirstChild("Nape")
-
-            if nape then
-                local d = (nape.Position - root.Position).Magnitude
-                if d < dist then
-                    dist = d
-                    nearest = nape
+    for _, titan in pairs(titans:GetChildren()) do
+        if titan:IsA("Model") and titan.Name ~= "Attack_Titan" then
+            local humanoid = titan:FindFirstChild("Humanoid")
+            if humanoid and humanoid.Health > 0 then
+                local hitboxes = titan:FindFirstChild("Hitboxes")
+                if hitboxes then
+                    local hit = hitboxes:FindFirstChild("Hit")
+                    if hit then
+                        local nape = hit:FindFirstChild("Nape")
+                        if nape and nape:IsA("BasePart") then
+                            local distance = (nape.Position - root.Position).Magnitude
+                            if distance < shortestDistance then
+                                shortestDistance = distance
+                                nearestNape = nape
+                            end
+                        end
+                    end
                 end
             end
         end
     end
 
-    return nearest
+    return nearestNape
 end
 
--- ATTACK
-local function Attack(nape)
+-- ATTACK FUNCTION
+local function Attack(targetNape)
+    if not targetNape then return end
+    
     local assets = ReplicatedStorage:FindFirstChild("Assets")
-    local remotes = assets and assets:FindFirstChild("Remotes")
+    if not assets then return end
+    
+    local remotes = assets:FindFirstChild("Remotes")
     if not remotes then return end
 
     local POST = remotes:FindFirstChild("POST")
     local GET = remotes:FindFirstChild("GET")
 
     if POST then
-        POST:FireServer("Attacks", "Slash", true)
+        pcall(function()
+            POST:FireServer("Attacks", "Slash", true)
+        end)
     end
 
     if GET then
         pcall(function()
-            GET:InvokeServer("Hitboxes","Register",nape,220,50)
+            GET:InvokeServer("Hitboxes", "Register", targetNape, 220, 50)
         end)
     end
 end
 
--- MAIN LOOP
+-- MAIN AUTO FARM LOOP
 task.spawn(function()
     print("Auto Farm Started")
-    ExtendNape()
+    extendNape(ExtendMultiplier, ExtendVisible, false)
 
     while AutoFarmEnabled do
         task.wait(0.15)
 
-        local char = player.Character
-        if char then
-            local root = char:FindFirstChild("HumanoidRootPart")
-            if root then
-                local nape = GetNearestNape()
-                if nape then
-                    local pos = nape.Position + Vector3.new(0,60,0)
-                    if (pos - root.Position).Magnitude > 100 then
-                        root.CFrame = CFrame.new(pos)
+        local character = player.Character
+        if character then
+            local rootPart = character:FindFirstChild("HumanoidRootPart")
+            if rootPart then
+                local targetNape = GetNearestNape()
+                if targetNape then
+                    local targetPosition = targetNape.Position + Vector3.new(0, 60, 0)
+                    local distanceToTarget = (targetPosition - rootPart.Position).Magnitude
+                    
+                    if distanceToTarget > 100 then
+                        rootPart.CFrame = CFrame.new(targetPosition)
                     end
 
-                    if (root.Position - nape.Position).Magnitude <= 180 then
-                        Attack(nape)
+                    local distanceToNape = (rootPart.Position - targetNape.Position).Magnitude
+                    if distanceToNape <= 180 then
+                        Attack(targetNape)
                         AutoReloadBlade()
                     end
                 end
@@ -150,3 +178,13 @@ task.spawn(function()
         end
     end
 end)
+
+-- CONTINUOUSLY EXTEND NAPES
+task.spawn(function()
+    while AutoFarmEnabled do
+        task.wait(2)
+        extendNape(ExtendMultiplier, ExtendVisible, false)
+    end
+end)
+
+print("Script loaded successfully!")
