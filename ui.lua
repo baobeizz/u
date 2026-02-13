@@ -19,7 +19,7 @@ local themes = {
 	Accent = Color3.fromRGB(10, 10, 10),
 	LightContrast = Color3.fromRGB(20, 20, 20),
 	DarkContrast = Color3.fromRGB(14, 14, 14),
-	TextColor = Color3.fromRGB(255, 255, 255)
+	TextColor = Color3.fromRGB(0, 255, 223)
 }
 
 -- ค่าความโปร่งใสสำหรับ UI ต่างๆ (ปรับค่าตรงนี้ได้ 0 = ทึบ, 1 = โปร่งสนิท)
