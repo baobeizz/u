@@ -342,18 +342,16 @@ do
 					Thickness = 1.5,
 					Transparency = 0.3,
 				}),
-				-- ไอคอน "☰" หรือ "✕"
-				utility:Create("TextLabel", {
+				-- ไอคอนรูปภาพ
+				utility:Create("ImageLabel", {
 					Name = "Icon",
 					BackgroundTransparency = 1,
 					AnchorPoint = Vector2.new(0.5, 0.5),
 					Position = UDim2.new(0.5, 0, 0.5, 0),
-					Size = UDim2.new(1, 0, 1, 0),
+					Size = UDim2.new(0, 28, 0, 28),
 					ZIndex = 101,
-					Font = Enum.Font.GothamBold,
-					Text = "☰",
-					TextColor3 = Color3.fromRGB(0, 255, 223),
-					TextSize = 20,
+					Image = "rbxassetid://8445470392",
+					ImageColor3 = Color3.fromRGB(0, 255, 223),
 				}),
 				-- มุมกลม
 				utility:Create("UICorner", {
@@ -410,16 +408,16 @@ do
 					if not hasMoved then
 						libraryObj:toggle()
 
-						-- เปลี่ยนไอคอนตาม state
+						-- เปลี่ยนสีปุ่มตาม state
 						local icon = toggleBtn.Icon
 						if libraryObj.position then
-							-- UI ถูกซ่อน
-							icon.Text = "☰"
-							utility:Tween(toggleBtn, {ImageColor3 = themes.Background}, 0.2)
+							-- UI ถูกซ่อน → icon สีปกติ
+							utility:Tween(icon, {ImageColor3 = Color3.fromRGB(0, 255, 223)}, 0.2)
+							utility:Tween(toggleBtn, {BackgroundColor3 = Color3.fromRGB(24, 24, 24)}, 0.2)
 						else
-							-- UI กำลังแสดง
-							icon.Text = "✕"
-							utility:Tween(toggleBtn, {ImageColor3 = themes.Accent}, 0.2)
+							-- UI กำลังแสดง → icon สีจาง
+							utility:Tween(icon, {ImageColor3 = Color3.fromRGB(100, 100, 100)}, 0.2)
+							utility:Tween(toggleBtn, {BackgroundColor3 = Color3.fromRGB(14, 14, 14)}, 0.2)
 						end
 					end
 				end
