@@ -326,31 +326,21 @@ do
 			local toggleBtn = utility:Create("ImageButton", {
 				Name = "ToggleButton",
 				Parent = container,
-				BackgroundTransparency = 1,
+				BackgroundColor3 = Color3.fromRGB(24, 24, 24),
+				BackgroundTransparency = 0,
+				BorderSizePixel = 0,
 				AnchorPoint = Vector2.new(0.5, 0.5),
 				Position = UDim2.new(0.08, 0, 0.88, 0),   -- มุมซ้ายล่าง ย้ายได้
 				Size = UDim2.new(0, 52, 0, 52),
-				ZIndex = 10,
-				Image = "rbxassetid://5028857472",
-				ImageColor3 = themes.Background,
-				ImageTransparency = transparency.Background,
-				ScaleType = Enum.ScaleType.Slice,
-				SliceCenter = Rect.new(4, 4, 296, 296),
+				ZIndex = 100,
 				AutoButtonColor = false,
+				Image = "",
 			}, {
-				-- เงาปุ่ม
-				utility:Create("ImageLabel", {
-					Name = "Glow",
-					BackgroundTransparency = 1,
-					AnchorPoint = Vector2.new(0.5, 0.5),
-					Position = UDim2.new(0.5, 0, 0.5, 0),
-					Size = UDim2.new(1, 24, 1, 24),
-					ZIndex = 9,
-					Image = "rbxassetid://5028857084",
-					ImageColor3 = themes.Glow,
-					ImageTransparency = 0.4,
-					ScaleType = Enum.ScaleType.Slice,
-					SliceCenter = Rect.new(24, 24, 276, 276)
+				-- ขอบเรืองแสง
+				utility:Create("UIStroke", {
+					Color = Color3.fromRGB(0, 244, 255),
+					Thickness = 1.5,
+					Transparency = 0.3,
 				}),
 				-- ไอคอน "☰" หรือ "✕"
 				utility:Create("TextLabel", {
@@ -359,10 +349,10 @@ do
 					AnchorPoint = Vector2.new(0.5, 0.5),
 					Position = UDim2.new(0.5, 0, 0.5, 0),
 					Size = UDim2.new(1, 0, 1, 0),
-					ZIndex = 11,
+					ZIndex = 101,
 					Font = Enum.Font.GothamBold,
 					Text = "☰",
-					TextColor3 = themes.TextColor,
+					TextColor3 = Color3.fromRGB(0, 255, 223),
 					TextSize = 20,
 				}),
 				-- มุมกลม
