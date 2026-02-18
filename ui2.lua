@@ -2080,6 +2080,267 @@ do
 		return module
 	end
 
+	function section:addMultiDropdown(data)
+		local this = {}
+		this.list = data.list or {}
+		this.title = data.title or "nil title"
+		this.selected = {}  -- เก็บค่าที่เลือกไว้ (table)
+		this.callback = data.callback or function() end
+
+		-- แปลง list เป็น string ทั้งหมด
+		for i, v in pairs(this.list) do
+			this.list[i] = tostring(v)
+		end
+
+		local dropdown = utility:Create("Frame", {
+			Name = "MultiDropdown",
+			Parent = self.container,
+			BackgroundTransparency = 1,
+			Size = UDim2.new(1, 0, 0, 30),
+			ClipsDescendants = true
+		}, {
+			utility:Create("UIListLayout", {
+				SortOrder = Enum.SortOrder.LayoutOrder,
+				Padding = UDim.new(0, 4)
+			}),
+			utility:Create("ImageLabel", {
+				Name = "Search",
+				BackgroundTransparency = 1,
+				BorderSizePixel = 0,
+				Size = UDim2.new(1, 0, 0, 30),
+				ZIndex = 2,
+				Image = "rbxassetid://5028857472",
+				ImageColor3 = themes.DarkContrast,
+				ImageTransparency = transparency.Element,
+				ScaleType = Enum.ScaleType.Slice,
+				SliceCenter = Rect.new(2, 2, 298, 298)
+			}, {
+				utility:Create("TextLabel", {
+					Name = "TextBox",
+					AnchorPoint = Vector2.new(0, 0.5),
+					BackgroundTransparency = 1,
+					TextTruncate = Enum.TextTruncate.AtEnd,
+					Position = UDim2.new(0, 10, 0.5, 1),
+					Size = UDim2.new(1, -42, 1, 0),
+					ZIndex = 3,
+					Font = Enum.Font.Gotham,
+					Text = this.title,
+					TextColor3 = themes.TextColor,
+					TextSize = 12,
+					TextTransparency = 0.10000000149012,
+					TextXAlignment = Enum.TextXAlignment.Left
+				}),
+				utility:Create("ImageButton", {
+					Name = "Button",
+					BackgroundTransparency = 1,
+					BorderSizePixel = 0,
+					Position = UDim2.new(1, -28, 0.5, -9),
+					Size = UDim2.new(0, 18, 0, 18),
+					ZIndex = 3,
+					Image = "rbxassetid://5012539403",
+					ImageColor3 = themes.TextColor,
+					SliceCenter = Rect.new(2, 2, 298, 298)
+				})
+			}),
+			utility:Create("ImageLabel", {
+				Name = "List",
+				BackgroundTransparency = 1,
+				BorderSizePixel = 0,
+				Size = UDim2.new(1, 0, 1, -34),
+				ZIndex = 2,
+				Image = "rbxassetid://5028857472",
+				ImageColor3 = themes.Background,
+				ImageTransparency = transparency.Background,
+				ScaleType = Enum.ScaleType.Slice,
+				SliceCenter = Rect.new(2, 2, 298, 298)
+			}, {
+				utility:Create("ScrollingFrame", {
+					Name = "Frame",
+					Active = true,
+					BackgroundTransparency = 1,
+					BorderSizePixel = 0,
+					Position = UDim2.new(0, 4, 0, 4),
+					Size = UDim2.new(1, -8, 1, -8),
+					CanvasSize = UDim2.new(0, 0, 0, 0),
+					ZIndex = 2,
+					ScrollBarThickness = 3,
+					ScrollBarImageColor3 = themes.DarkContrast
+				}, {
+					utility:Create("UIListLayout", {
+						SortOrder = Enum.SortOrder.LayoutOrder,
+						Padding = UDim.new(0, 4)
+					})
+				})
+			})
+		})
+
+		local module = {Instance = dropdown, Options = this}
+		self.modules[#self.modules + 1] = module
+
+		local isOpen = false
+		local header = dropdown.Search
+		local frame = dropdown.List.Frame
+
+		-- ฟังก์ชันอัปเดต label หัว dropdown
+		local function updateLabel()
+			local keys = {}
+			for k in pairs(this.selected) do
+				keys[#keys + 1] = k
+			end
+			if #keys == 0 then
+				header.TextBox.Text = this.title
+			else
+				header.TextBox.Text = table.concat(keys, ", ")
+			end
+		end
+
+		-- ฟังก์ชันสร้าง list items
+		local function buildList()
+			for _, child in pairs(frame:GetChildren()) do
+				if child:IsA("ImageButton") then
+					child:Destroy()
+				end
+			end
+
+			local entries = 0
+			for _, value in pairs(this.list) do
+				local isChecked = this.selected[value] == true
+
+				local item = utility:Create("ImageButton", {
+					Name = value,
+					Parent = frame,
+					BackgroundTransparency = 1,
+					BorderSizePixel = 0,
+					Size = UDim2.new(1, 0, 0, 30),
+					ZIndex = 2,
+					Image = "rbxassetid://5028857472",
+					ImageColor3 = isChecked and themes.TextColor or themes.DarkContrast,
+					ImageTransparency = isChecked and 0.7 or transparency.Element,
+					ScaleType = Enum.ScaleType.Slice,
+					SliceCenter = Rect.new(2, 2, 298, 298)
+				}, {
+					-- checkmark
+					utility:Create("TextLabel", {
+						Name = "Check",
+						BackgroundTransparency = 1,
+						Position = UDim2.new(1, -24, 0, 0),
+						Size = UDim2.new(0, 16, 1, 0),
+						ZIndex = 3,
+						Font = Enum.Font.GothamBold,
+						Text = isChecked and "✓" or "",
+						TextColor3 = themes.TextColor,
+						TextSize = 12
+					}),
+					utility:Create("TextLabel", {
+						Name = "Title",
+						BackgroundTransparency = 1,
+						Position = UDim2.new(0, 10, 0, 0),
+						Size = UDim2.new(1, -34, 1, 0),
+						ZIndex = 3,
+						Font = Enum.Font.Gotham,
+						Text = value,
+						TextColor3 = themes.TextColor,
+						TextSize = 12,
+						TextXAlignment = Enum.TextXAlignment.Left,
+						TextTransparency = 0.10000000149012
+					})
+				})
+
+				item.MouseButton1Click:Connect(function()
+					-- toggle เลือก/ยกเลิก
+					if this.selected[value] then
+						this.selected[value] = nil
+					else
+						this.selected[value] = true
+					end
+
+					-- อัปเดต UI
+					buildList()
+					updateLabel()
+
+					-- เรียก callback พร้อม list ที่เลือก
+					local result = {}
+					for k in pairs(this.selected) do
+						result[#result + 1] = k
+					end
+					this.callback(result)
+				end)
+
+				entries = entries + 1
+			end
+
+			-- อัปเดต canvas size
+			if entries > 3 then
+				for _, btn in pairs(frame:GetChildren()) do
+					if btn:IsA("ImageButton") then
+						btn.Size = UDim2.new(1, -6, 0, 30)
+					end
+				end
+				frame.CanvasSize = UDim2.new(0, 0, 0, (entries * 34) - 4)
+				frame.ScrollBarImageTransparency = 0
+			else
+				frame.CanvasSize = UDim2.new(0, 0, 0, 0)
+				frame.ScrollBarImageTransparency = 1
+			end
+
+			return entries
+		end
+
+		-- เปิด/ปิด dropdown
+		local function toggleOpen(forceClose)
+			if forceClose or isOpen then
+				isOpen = false
+				utility:Tween(dropdown, {Size = UDim2.new(1, 0, 0, 30)}, 0.3)
+				utility:Tween(header.Button, {Rotation = 0}, 0.3)
+			else
+				isOpen = true
+				local entries = buildList()
+				local listH = math.clamp(entries, 0, 3) * 34 + 8
+				utility:Tween(dropdown, {Size = UDim2.new(1, 0, 0, 30 + 4 + listH)}, 0.3)
+				utility:Tween(header.Button, {Rotation = 180}, 0.3)
+			end
+		end
+
+		header.Button.MouseButton1Click:Connect(function()
+			toggleOpen()
+		end)
+
+		dropdown:GetPropertyChangedSignal("Size"):Connect(function()
+			self:Resize()
+		end)
+
+		-- API update
+		function this:Update(dataOptions)
+			for i, v in pairs(dataOptions) do
+				if i == "list" then
+					for a, x in pairs(v) do v[a] = tostring(x) end
+					module.Options.list = v
+					module.Options.selected = {}
+					updateLabel()
+					if isOpen then buildList() end
+				elseif i == "selected" and type(v) == "table" then
+					module.Options.selected = {}
+					for _, x in pairs(v) do
+						module.Options.selected[tostring(x)] = true
+					end
+					updateLabel()
+					if isOpen then buildList() end
+				end
+			end
+		end
+
+		-- API getSelected
+		function this:GetSelected()
+			local result = {}
+			for k in pairs(this.selected) do
+				result[#result + 1] = k
+			end
+			return result
+		end
+
+		return module
+	end
+
 	-- class functions
 
 	function library:SelectPage(data)
