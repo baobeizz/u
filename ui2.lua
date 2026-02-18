@@ -227,7 +227,7 @@ do
 
 		local container = utility:Create("ScreenGui", {
 			Name = title,
-			Parent = game.CoreGui
+			Parent = gethui and gethui() or game:GetService("CoreGui")
 		}, {
 			utility:Create("ImageLabel", {
 				Name = "Main",
