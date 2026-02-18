@@ -328,7 +328,7 @@ do
 				Parent = container,
 				BackgroundTransparency = 1,
 				AnchorPoint = Vector2.new(0.5, 0.5),
-				Position = UDim2.new(0.92, 0, 0.88, 0),   -- มุมขวาล่าง ย้ายได้
+				Position = UDim2.new(0.08, 0, 0.88, 0),   -- มุมซ้ายล่าง ย้ายได้
 				Size = UDim2.new(0, 52, 0, 52),
 				ZIndex = 10,
 				Image = "rbxassetid://5028857472",
