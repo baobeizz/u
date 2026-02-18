@@ -350,7 +350,7 @@ do
 					Position = UDim2.new(0.5, 0, 0.5, 0),
 					Size = UDim2.new(0, 28, 0, 28),
 					ZIndex = 101,
-					Image = "rbxassetid://8445470392",
+					Image = "rbxassetid://6031763426",
 					ImageColor3 = Color3.fromRGB(0, 255, 223),
 				}),
 				-- มุมกลม
