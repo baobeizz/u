@@ -330,7 +330,7 @@ do
 				BackgroundTransparency = 0,
 				BorderSizePixel = 0,
 				AnchorPoint = Vector2.new(0.5, 0.5),
-				Position = UDim2.new(0, 100, 0.5, 0),   -- ซ้ายกลาง ย้ายได้
+				Position = UDim2.new(0, 500, 0.5, 0),   -- ซ้ายกลาง ย้ายได้
 				Size = UDim2.new(0, 52, 0, 52),
 				ZIndex = 100,
 				AutoButtonColor = false,
