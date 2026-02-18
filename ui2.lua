@@ -319,14 +319,12 @@ do
 		}, library)
 
 		-- ============================================================
-		-- ปุ่มเปิด/ปิด UI สำหรับมือถือ (Mobile Toggle Button)
-		-- แสดงเฉพาะเมื่อใช้งานบนมือถือ / Touch Device เท่านั้น
+		-- ปุ่มเปิด/ปิด UI (Toggle Button) - แสดงทุกระบบ PC / มือถือ / Tablet
 		-- ============================================================
-		if input.TouchEnabled and not input.KeyboardEnabled then
-
+		do
 			-- ตัวปุ่มหลัก (กรอบกลม)
-			local mobileBtn = utility:Create("ImageButton", {
-				Name = "MobileToggle",
+			local toggleBtn = utility:Create("ImageButton", {
+				Name = "ToggleButton",
 				Parent = container,
 				BackgroundTransparency = 1,
 				AnchorPoint = Vector2.new(0.5, 0.5),
@@ -367,35 +365,46 @@ do
 					TextColor3 = themes.TextColor,
 					TextSize = 20,
 				}),
-				-- วงกลมขอบ (ตกแต่ง)
+				-- มุมกลม
 				utility:Create("UICorner", {
 					CornerRadius = UDim.new(1, 0)
 				}),
 			})
 
-			-- ทำให้ปุ่มลากได้ (Draggable) บนมือถือ
+			-- ทำให้ปุ่มลากได้ รองรับทั้ง Mouse และ Touch
 			local isDragging = false
 			local dragStartPos
 			local btnStartPos
 			local hasMoved = false
 			local DRAG_THRESHOLD = 6  -- pixel ที่ถือว่าเป็นการลาก
 
-			mobileBtn.InputBegan:Connect(function(inp)
-				if inp.UserInputType == Enum.UserInputType.Touch then
+			-- InputType ที่รองรับ (Mouse + Touch)
+			local function isValidInput(inp)
+				return inp.UserInputType == Enum.UserInputType.MouseButton1
+					or inp.UserInputType == Enum.UserInputType.Touch
+			end
+
+			local function isValidMove(inp)
+				return inp.UserInputType == Enum.UserInputType.MouseMovement
+					or inp.UserInputType == Enum.UserInputType.Touch
+			end
+
+			toggleBtn.InputBegan:Connect(function(inp)
+				if isValidInput(inp) then
 					isDragging = true
 					hasMoved = false
 					dragStartPos = inp.Position
-					btnStartPos = mobileBtn.Position
+					btnStartPos = toggleBtn.Position
 				end
 			end)
 
-			mobileBtn.InputChanged:Connect(function(inp)
-				if inp.UserInputType == Enum.UserInputType.Touch and isDragging then
+			toggleBtn.InputChanged:Connect(function(inp)
+				if isValidMove(inp) and isDragging then
 					local delta = inp.Position - dragStartPos
 					if math.abs(delta.X) > DRAG_THRESHOLD or math.abs(delta.Y) > DRAG_THRESHOLD then
 						hasMoved = true
 					end
-					mobileBtn.Position = UDim2.new(
+					toggleBtn.Position = UDim2.new(
 						btnStartPos.X.Scale,
 						btnStartPos.X.Offset + delta.X,
 						btnStartPos.Y.Scale,
@@ -404,30 +413,30 @@ do
 				end
 			end)
 
-			mobileBtn.InputEnded:Connect(function(inp)
-				if inp.UserInputType == Enum.UserInputType.Touch then
+			toggleBtn.InputEnded:Connect(function(inp)
+				if isValidInput(inp) then
 					isDragging = false
-					-- ถ้าไม่ได้ลาก = tap → toggle UI
+					-- ถ้าไม่ได้ลาก = click/tap → toggle UI
 					if not hasMoved then
 						libraryObj:toggle()
 
 						-- เปลี่ยนไอคอนตาม state
-						local icon = mobileBtn.Icon
+						local icon = toggleBtn.Icon
 						if libraryObj.position then
-							-- UI ซ่อนอยู่
+							-- UI ถูกซ่อน
 							icon.Text = "☰"
-							utility:Tween(mobileBtn, {ImageColor3 = themes.Background}, 0.2)
+							utility:Tween(toggleBtn, {ImageColor3 = themes.Background}, 0.2)
 						else
-							-- UI แสดงอยู่
+							-- UI กำลังแสดง
 							icon.Text = "✕"
-							utility:Tween(mobileBtn, {ImageColor3 = themes.Accent}, 0.2)
+							utility:Tween(toggleBtn, {ImageColor3 = themes.Accent}, 0.2)
 						end
 					end
 				end
 			end)
 
-			-- เก็บ reference ของปุ่มไว้ใน library object
-			libraryObj.mobileToggleBtn = mobileBtn
+			-- เก็บ reference ไว้ใน library object
+			libraryObj.toggleBtn = toggleBtn
 		end
 		-- ============================================================
 
