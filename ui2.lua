@@ -2086,7 +2086,7 @@ do
 		local selectedPage = data.page
 		local toggle = data.toggle
 
-		if toggle and self.focusedPage == page then
+		if toggle and self.focusedPage == selectedPage then
 			return
 		end
 
