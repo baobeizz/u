@@ -403,26 +403,13 @@ do
 			end)
 
 			toggleBtn.InputEnded:Connect(function(inp)
-				if isValidInput(inp) then
-					isDragging = false
-					-- ถ้าไม่ได้ลาก = click/tap → toggle UI
-					if not hasMoved then
-						libraryObj:toggle()
-
-						-- เปลี่ยนสีปุ่มตาม state
-						local icon = toggleBtn.Icon
-						if libraryObj.position then
-							-- UI ถูกซ่อน → icon สีปกติ
-							utility:Tween(icon, {ImageColor3 = Color3.fromRGB(0, 255, 223)}, 0.2)
-							utility:Tween(toggleBtn, {BackgroundColor3 = Color3.fromRGB(24, 24, 24)}, 0.2)
-						else
-							-- UI กำลังแสดง → icon สีจาง
-							utility:Tween(icon, {ImageColor3 = Color3.fromRGB(100, 100, 100)}, 0.2)
-							utility:Tween(toggleBtn, {BackgroundColor3 = Color3.fromRGB(14, 14, 14)}, 0.2)
-						end
-					end
-				end
-			end)
+                if isValidInput(inp) then
+                    isDragging = false
+                    if not hasMoved then
+                        libraryObj:toggle()
+                    end
+                end
+            end)
 
 			-- เก็บ reference ไว้ใน library object
 			libraryObj.toggleBtn = toggleBtn
