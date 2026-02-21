@@ -617,47 +617,43 @@ do
 
 	function library:toggle()
 
-        if self.toggling then
-            return
-        end
+		if self.toggling then
+			return
+		end
 
-        self.toggling = true
+		self.toggling = true
 
-        local container = self.container.Main
-        local topbar = container.TopBar
+		local container = self.container.Main
+		local topbar = container.TopBar
 
-        -- แก้ตรงนี้: เซ็ต position จาก AbsolutePosition ถ้ายังไม่มี
-        if not self.position then
-            self.position = UDim2.new(
-                0, container.AbsolutePosition.X + container.AbsoluteSize.X / 2,
-                0, container.AbsolutePosition.Y + container.AbsoluteSize.Y / 2
-            )
-            container.ClipsDescendants = true
+		if self.position then
+			utility:Tween(container, {
+				Size = UDim2.new(0, 511, 0, 428),
+				Position = self.position
+			}, 0.2)
+			wait(0.2)
 
-            utility:Tween(topbar, {Size = UDim2.new(1, 0, 1, 0)}, 0.2)
-            wait(0.2)
+			utility:Tween(topbar, {Size = UDim2.new(1, 0, 0, 38)}, 0.2)
+			wait(0.2)
 
-            utility:Tween(container, {
-                Size = UDim2.new(0, 511, 0, 0),
-                Position = self.position + UDim2.new(0, 0, 0, 428)
-            }, 0.2)
-            wait(0.2)
-        else
-            utility:Tween(container, {
-                Size = UDim2.new(0, 511, 0, 428),
-                Position = self.position
-            }, 0.2)
-            wait(0.2)
+			container.ClipsDescendants = false
+			self.position = nil
+		else
+			self.position = container.Position
+			container.ClipsDescendants = true
 
-            utility:Tween(topbar, {Size = UDim2.new(1, 0, 0, 38)}, 0.2)
-            wait(0.2)
+			utility:Tween(topbar, {Size = UDim2.new(1, 0, 1, 0)}, 0.2)
+			wait(0.2)
 
-            container.ClipsDescendants = false
-            self.position = nil
-        end
+			utility:Tween(container, {
+				Size = UDim2.new(0, 511, 0, 0),
+				Position = self.position + UDim2.new(0, 0, 0, 428)
+			}, 0.2)
+			wait(0.2)
+		end
 
-        self.toggling = false
-    end
+		self.toggling = false
+	end
 
 	-- new modules
 
