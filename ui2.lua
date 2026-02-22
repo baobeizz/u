@@ -617,43 +617,51 @@ do
 
 	function library:toggle()
 
-		if self.toggling then
-			return
-		end
+        if self.toggling then
+            return
+        end
 
-		self.toggling = true
+        self.toggling = true
 
-		local container = self.container.Main
-		local topbar = container.TopBar
+        local container = self.container.Main
+        local topbar = container.TopBar
+        -- เพิ่มบรรทัดนี้
+        local icon = self.toggleBtn and self.toggleBtn:FindFirstChild("Icon")
 
-		if self.position then
-			utility:Tween(container, {
-				Size = UDim2.new(0, 511, 0, 428),
-				Position = self.position
-			}, 0.2)
-			wait(0.2)
+        if self.position then
+            -- UI กำลังจะเปิด (แสดง)
+            if icon then icon.Image = "rbxassetid://6023426926" end  -- icon เปิด
 
-			utility:Tween(topbar, {Size = UDim2.new(1, 0, 0, 38)}, 0.2)
-			wait(0.2)
+            utility:Tween(container, {
+                Size = UDim2.new(0, 511, 0, 428),
+                Position = self.position
+            }, 0.2)
+            wait(0.2)
 
-			container.ClipsDescendants = false
-			self.position = nil
-		else
-			self.position = container.Position
-			container.ClipsDescendants = true
+            utility:Tween(topbar, {Size = UDim2.new(1, 0, 0, 38)}, 0.2)
+            wait(0.2)
 
-			utility:Tween(topbar, {Size = UDim2.new(1, 0, 1, 0)}, 0.2)
-			wait(0.2)
+            container.ClipsDescendants = false
+            self.position = nil
+        else
+            -- UI กำลังจะปิด (ซ่อน)
+            if icon then icon.Image = "rbxassetid://6031094678" end  -- icon ปิด
 
-			utility:Tween(container, {
-				Size = UDim2.new(0, 511, 0, 0),
-				Position = self.position + UDim2.new(0, 0, 0, 428)
-			}, 0.2)
-			wait(0.2)
-		end
+            self.position = container.Position
+            container.ClipsDescendants = true
 
-		self.toggling = false
-	end
+            utility:Tween(topbar, {Size = UDim2.new(1, 0, 1, 0)}, 0.2)
+            wait(0.2)
+
+            utility:Tween(container, {
+                Size = UDim2.new(0, 511, 0, 0),
+                Position = self.position + UDim2.new(0, 0, 0, 428)
+            }, 0.2)
+            wait(0.2)
+        end
+
+        self.toggling = false
+    end
 
 	-- new modules
 
