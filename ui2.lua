@@ -617,51 +617,43 @@ do
 
 	function library:toggle()
 
-        if self.toggling then
-            return
-        end
+		if self.toggling then
+			return
+		end
 
-        self.toggling = true
+		self.toggling = true
 
-        local container = self.container.Main
-        local topbar = container.TopBar
-        -- เพิ่มบรรทัดนี้
-        local icon = self.toggleBtn and self.toggleBtn:FindFirstChild("Icon")
+		local container = self.container.Main
+		local topbar = container.TopBar
 
-        if self.position then
-            -- UI กำลังจะเปิด (แสดง)
-            if icon then icon.Image = "rbxassetid://6023426926" end  -- icon เปิด
+		if self.position then
+			utility:Tween(container, {
+				Size = UDim2.new(0, 511, 0, 428),
+				Position = self.position
+			}, 0.2)
+			wait(0.2)
 
-            utility:Tween(container, {
-                Size = UDim2.new(0, 511, 0, 428),
-                Position = self.position
-            }, 0.2)
-            wait(0.2)
+			utility:Tween(topbar, {Size = UDim2.new(1, 0, 0, 38)}, 0.2)
+			wait(0.2)
 
-            utility:Tween(topbar, {Size = UDim2.new(1, 0, 0, 38)}, 0.2)
-            wait(0.2)
+			container.ClipsDescendants = false
+			self.position = nil
+		else
+			self.position = container.Position
+			container.ClipsDescendants = true
 
-            container.ClipsDescendants = false
-            self.position = nil
-        else
-            -- UI กำลังจะปิด (ซ่อน)
-            if icon then icon.Image = "rbxassetid://6031094678" end  -- icon ปิด
+			utility:Tween(topbar, {Size = UDim2.new(1, 0, 1, 0)}, 0.2)
+			wait(0.2)
 
-            self.position = container.Position
-            container.ClipsDescendants = true
+			utility:Tween(container, {
+				Size = UDim2.new(0, 511, 0, 0),
+				Position = self.position + UDim2.new(0, 0, 0, 428)
+			}, 0.2)
+			wait(0.2)
+		end
 
-            utility:Tween(topbar, {Size = UDim2.new(1, 0, 1, 0)}, 0.2)
-            wait(0.2)
-
-            utility:Tween(container, {
-                Size = UDim2.new(0, 511, 0, 0),
-                Position = self.position + UDim2.new(0, 0, 0, 428)
-            }, 0.2)
-            wait(0.2)
-        end
-
-        self.toggling = false
-    end
+		self.toggling = false
+	end
 
 	-- new modules
 
@@ -900,88 +892,103 @@ do
 	end
 
 	function section:addToggle(data)
-		local this = {}
-		this.title = data.title or "nil text"
-		this.toggled = data.default or false
-		this.callback = data.callback or function() end
+        local this = {}
+        this.title = data.title or "nil text"
+        this.toggled = data.default or false
+        this.callback = data.callback or function() end
 
-		local toggle = utility:Create("ImageButton", {
-			Name = "Toggle",
-			Parent = self.container,
-			BackgroundTransparency = 1,
-			BorderSizePixel = 0,
-			Size = UDim2.new(1, 0, 0, 30),
-			ZIndex = 2,
-			Image = "rbxassetid://5028857472",
-			ImageColor3 = themes.DarkContrast,
-			ImageTransparency = transparency.Element,
-			ScaleType = Enum.ScaleType.Slice,
-			SliceCenter = Rect.new(2, 2, 298, 298)
-		},{
-			utility:Create("TextLabel", {
-				Name = "Title",
-				AnchorPoint = Vector2.new(0, 0.5),
-				BackgroundTransparency = 1,
-				Position = UDim2.new(0, 10, 0.5, 1),
-				Size = UDim2.new(0.5, 0, 1, 0),
-				ZIndex = 3,
-				Font = Enum.Font.Gotham,
-				Text = this.title,
-				TextColor3 = themes.TextColor,
-				TextSize = 12,
-				TextTransparency = 0.10000000149012,
-				TextXAlignment = Enum.TextXAlignment.Left
-			}),
-			utility:Create("ImageLabel", {
-				Name = "Button",
-				BackgroundTransparency = 1,
-				BorderSizePixel = 0,
-				Position = UDim2.new(1, -50, 0.5, -8),
-				Size = UDim2.new(0, 40, 0, 16),
-				ZIndex = 2,
-				Image = "rbxassetid://5028857472",
-				ImageColor3 = themes.LightContrast,
-				ImageTransparency = transparency.Element,
-				ScaleType = Enum.ScaleType.Slice,
-				SliceCenter = Rect.new(2, 2, 298, 298)
-			}, {
-				utility:Create("ImageLabel", {
-					Name = "Frame",
-					BackgroundTransparency = 1,
-					Position = UDim2.new(0, 2, 0.5, -6),
-					Size = UDim2.new(1, -22, 1, -4),
-					ZIndex = 2,
-					Image = "rbxassetid://5028857472",
-					ImageColor3 = themes.TextColor,
-					ScaleType = Enum.ScaleType.Slice,
-					SliceCenter = Rect.new(2, 2, 298, 298)
-				})
-			})
-		})
-		local module = {Instance = toggle, Options = this}
-		self.modules[#self.modules + 1] = module
+        local toggle = utility:Create("ImageButton", {
+            Name = "Toggle",
+            Parent = self.container,
+            BackgroundTransparency = 1,
+            BorderSizePixel = 0,
+            Size = UDim2.new(1, 0, 0, 30),
+            ZIndex = 2,
+            Image = "rbxassetid://5028857472",
+            ImageColor3 = themes.DarkContrast,
+            ImageTransparency = transparency.Element,
+            ScaleType = Enum.ScaleType.Slice,
+            SliceCenter = Rect.new(2, 2, 298, 298)
+        },{
+            utility:Create("TextLabel", {
+                Name = "Title",
+                AnchorPoint = Vector2.new(0, 0.5),
+                BackgroundTransparency = 1,
+                Position = UDim2.new(0, 10, 0.5, 1),
+                Size = UDim2.new(0.5, 0, 1, 0),
+                ZIndex = 3,
+                Font = Enum.Font.Gotham,
+                Text = this.title,
+                TextColor3 = themes.TextColor,
+                TextSize = 12,
+                TextTransparency = 0.10000000149012,
+                TextXAlignment = Enum.TextXAlignment.Left
+            }),
+            utility:Create("Frame", {
+                Name = "Button",
+                BackgroundColor3 = themes.LightContrast,
+                BorderSizePixel = 0,
+                Position = UDim2.new(1, -52, 0.5, -9),
+                Size = UDim2.new(0, 42, 0, 18),
+                ZIndex = 3,
+            }, {
+                utility:Create("UICorner", {
+                    CornerRadius = UDim.new(1, 0)
+                }),
+                utility:Create("UIStroke", {
+                    Color = themes.TextColor,
+                    Thickness = 1,
+                    Transparency = 0.7,
+                }),
+                utility:Create("Frame", {
+                    Name = "Frame",
+                    BackgroundColor3 = themes.TextColor,
+                    BorderSizePixel = 0,
+                    AnchorPoint = Vector2.new(0, 0.5),
+                    Position = UDim2.new(0, 3, 0.5, 0),
+                    Size = UDim2.new(0, 12, 0, 12),
+                    ZIndex = 4,
+                }, {
+                    utility:Create("UICorner", {
+                        CornerRadius = UDim.new(1, 0)
+                    }),
+                    utility:Create("ImageLabel", {
+                        Name = "Icon",
+                        BackgroundTransparency = 1,
+                        AnchorPoint = Vector2.new(0.5, 0.5),
+                        Position = UDim2.new(0.5, 0, 0.5, 0),
+                        Size = UDim2.new(1, 0, 1, 0),
+                        ZIndex = 5,
+                        Image = "rbxassetid://6031094678",
+                        ImageColor3 = themes.DarkContrast,
+                        ScaleType = Enum.ScaleType.Fit
+                    })
+                })
+            })
+        })
 
-		self:updateToggle(module)
+        local module = {Instance = toggle, Options = this}
+        self.modules[#self.modules + 1] = module
 
-		function this:Update(dataOptions)
+        self:updateToggle(module)
+
+        function this:Update(dataOptions)
             for i,v in pairs(dataOptions) do
                 if (module.Options[i] and i ~= "Update") then
                     module.Options[i] = tostring(v)
                 end
-			end
+            end
+            return section:updateToggle(module)
+        end
 
-			return section:updateToggle(module)
-		end
+        toggle.MouseButton1Click:Connect(function()
+            this.toggled = not this.toggled
+            self:updateToggle(module)
+            this.callback(this.toggled)
+        end)
 
-		toggle.MouseButton1Click:Connect(function()
-			this.toggled = not this.toggled
-			self:updateToggle(module)
-
-			this.callback(this.toggled)
-		end)
-
-		return module
-	end
+        return module
+    end
 
 	function section:addTextbox(data)
 		local this = {}
@@ -2490,30 +2497,28 @@ do
 	end
 
 	function section:updateToggle(module)
-		local toggle = module.Instance
-		local options = module.Options
+        local toggle = module.Instance
+        local options = module.Options
+        local btn = toggle.Button
+        local frame = btn.Frame
+        local icon = frame.Icon
 
-		local position = {
-			In = UDim2.new(0, 2, 0.5, -6),
-			Out = UDim2.new(0, 20, 0.5, -6)
-		}
+        toggle.Title.Text = options.title
 
-		local frame = toggle.Button.Frame
-		local selectedPosition = options.toggled and "Out" or "In"
-
-		toggle.Title.Text = module.Options.title
-
-		utility:Tween(frame, {
-			Size = UDim2.new(1, -22, 1, -9),
-			Position = position[selectedPosition] + UDim2.new(0, 0, 0, 2.5)
-		}, 0.2)
-
-		wait(0.1)
-		utility:Tween(frame, {
-			Size = UDim2.new(1, -22, 1, -4),
-			Position = position[selectedPosition]
-		}, 0.1)
-	end
+        if options.toggled then
+            icon.Image = "rbxassetid://6023426926"
+            utility:Tween(frame, {Position = UDim2.new(0, 27, 0.5, 0)}, 0.2)
+            utility:Tween(btn, {BackgroundColor3 = themes.TextColor}, 0.2)
+            utility:Tween(frame, {BackgroundColor3 = themes.DarkContrast}, 0.2)
+            utility:Tween(icon, {ImageColor3 = themes.TextColor}, 0.2)
+        else
+            icon.Image = "rbxassetid://6031094678"
+            utility:Tween(frame, {Position = UDim2.new(0, 3, 0.5, 0)}, 0.2)
+            utility:Tween(btn, {BackgroundColor3 = themes.LightContrast}, 0.2)
+            utility:Tween(frame, {BackgroundColor3 = themes.TextColor}, 0.2)
+            utility:Tween(icon, {ImageColor3 = themes.DarkContrast}, 0.2)
+        end
+    end
 
 	function section:updateTextbox(module)
 		module.Instance.Title.Text = module.Options.title
