@@ -2087,7 +2087,15 @@ do
 		local this = {}
 		this.list = data.list or {}
 		this.title = data.title or "nil title"
-		this.selected = {}  -- เก็บค่าที่เลือกไว้ (table)
+        this.selected = {}  -- เก็บค่าที่เลือกไว้ (table)
+
+        -- โหลด default จาก config
+        if data.default and type(data.default) == "table" then
+            for _, v in ipairs(data.default) do
+                this.selected[tostring(v)] = true
+            end
+        end
+
 		this.callback = data.callback or function() end
 
 		-- แปลง list เป็น string ทั้งหมด
@@ -2341,7 +2349,8 @@ do
 			return result
 		end
 
-		return module
+        updateLabel()  -- แสดงค่าที่โหลดมาตั้งแต่แรก
+        return module
 	end
 
 	-- class functions
