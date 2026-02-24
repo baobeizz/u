@@ -14,12 +14,12 @@ local utility = {}
 -- themes (ปรับให้โปร่งใสจางๆ)
 local objects = {}
 local themes = {
-	Background = Color3.fromRGB(24, 24, 24),
-	Glow = Color3.fromRGB(0, 244, 255),
-	Accent = Color3.fromRGB(10, 10, 10),
-	LightContrast = Color3.fromRGB(20, 20, 20),
-	DarkContrast = Color3.fromRGB(14, 14, 14),
-	TextColor = Color3.fromRGB(0, 255, 223)
+	Background = Color3.fromRGB(25, 0, 0),     -- แดงเข้ม (พื้นหลัง)
+	Glow = Color3.fromRGB(255, 60, 60),        -- ขอบแดงเรืองๆ
+	Accent = Color3.fromRGB(40, 0, 0),
+	LightContrast = Color3.fromRGB(60, 0, 0),
+	DarkContrast = Color3.fromRGB(15, 0, 0),
+	TextColor = Color3.fromRGB(255, 180, 180)  -- อ่านง่ายบนพื้นแดง
 }
 
 -- ค่าความโปร่งใสสำหรับ UI ต่างๆ (ปรับค่าตรงนี้ได้ 0 = ทึบ, 1 = โปร่งสนิท)
